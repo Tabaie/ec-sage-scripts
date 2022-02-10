@@ -20,6 +20,20 @@ B = 1012*(1+I)
 if q % 4 == 3 or q % 8 == 5:
     raise RuntimeError("Use an optimized routine")
     
+#why is this necessary?
+#seems like sagemath does a poor job with large powers of field extension elements
+def exp(base, pow):
+    res = k(1)
+    baseP2i = k(1)
+    p = pow
+
+    while p != 0:
+        if p % 2 == 1:
+            res *= baseP2i
+        baseP2i *= 2
+    
+    return res
+
 qP = rz(q - 1)
 c1 = 0
 while qP % 2 == 0:
@@ -43,7 +57,8 @@ if args.stop_at_c6:
     sys.exit(0)
 
 if args.c6 == 'not-provided':
-    c6 = Z**rz(c2)
+    #c6 = Z**rz(c2)
+    c6 = exp(Z, rz(c2))
 else:
     c6 = rz(args.c6)
 
